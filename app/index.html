@@ -1,9 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>DevOps Demo</title>
+    <meta charset="UTF-8">
+    <title>DevOps Pipeline</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .pipeline {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stage {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            width: 120px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .stage:hover {
+            transform: scale(1.1);
+            background: #334155;
+        }
+
+        .arrow {
+            font-size: 24px;
+        }
+
+        .stage span {
+            display: block;
+            font-size: 14px;
+            margin-top: 8px;
+            color: #94a3b8;
+        }
+
+        footer {
+            margin-top: 50px;
+            font-size: 14px;
+            color: #64748b;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello DevOps</h1>
+
+    <h1>🚀 DevOps Pipeline</h1>
+
+    <div class="pipeline">
+        <div class="stage">📝<br>Plan<span>Define requirements</span></div>
+        <div class="arrow">➡️</div>
+        <div class="stage">💻<br>Code<span>Develop features</span></div>
+        <div class="arrow">➡️</div>
+        <div class="stage">🏗️<br>Build<span>Compile & package</span></div>
+        <div class="arrow">➡️</div>
+        <div class="stage">🧪<br>Test<span>Run tests</span></div>
+        <div class="arrow">➡️</div>
+        <div class="stage">📦<br>Release<span>Prepare release</span></div>
+        <div class="arrow">➡️</div>
+        <div class="stage">🚀<br>Deploy<span>Deploy to prod</span></div>
+        <div class="arrow">➡️</div>
+        <div class="stage">📊<br>Monitor<span>Track performance</span></div>
+    </div>
+
+    <footer>
+        DevOps Lifecycle Visualization
+    </footer>
+
 </body>
 </html>

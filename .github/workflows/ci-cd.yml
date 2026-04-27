@@ -37,7 +37,7 @@ jobs:
             cd /home/ec2-user
 
             rm -rf demo-app
-            git clone https://github.com/rajatdevops1/demo-app.git
+            git clone https://github.com/ujwalakula-p99soft/Devops-Demo.git
             cd demo-app
 
             docker rm -f nginx-container || true

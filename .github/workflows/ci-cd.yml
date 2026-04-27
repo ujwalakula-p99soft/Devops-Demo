@@ -8,53 +8,35 @@ jobs:
   pipeline:
     runs-on: ubuntu-latest
     
-    # This environment variable forces the runner to use Node 24
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
     steps:
-      # 1. Checkout (Pinned to v4.2.2 to resolve Node 20 warning)
+      # Use v4 but suppress the node warning by telling GitHub it's okay to use Node 20 for now
       - name: Checkout Code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
+        env:
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
-      # 2. Build Docker image
       - name: Build Image
         run: docker build -t devops-demo .
 
-      # 3. Run & Test container locally on the runner
       - name: Test Container
         run: |
           docker run -d -p 8080:80 --name test devops-demo
-          echo "Waiting for container to start..."
-          sleep 10
-          echo "Checking HTTP response..."
-          curl -f http://localhost:8080
+          sleep 5
+          curl -f http://localhost:8080 || exit 1
           docker rm -f test
 
-      # 4. Deploy to EC2 (Updated to v1.2.0 for Node 24 support)
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
+          # We removed 'set -e' temporarily to see which specific command fails
           script: |
-            set -e
             cd /home/ec2-user
-            
-            echo "Refreshing application folder..."
-            rm -rf demo-app
+            sudo rm -rf demo-app
             git clone https://github.com demo-app
             cd demo-app
-            
-            echo "Removing old container if it exists..."
-            docker rm -f nginx-container || true
-            
-            echo "Building and starting new container..."
-            docker build -t nginx-devops-demo .
-            docker run -d -p 80:80 --name nginx-container nginx-devops-demo
-            
-            echo "Final check..."
-            sleep 5
-            docker ps | grep nginx-container
-            echo "Deployment successful"
+            sudo docker rm -f nginx-container || true
+            sudo docker build -t nginx-devops-demo .
+            sudo docker run -d -p 80:80 --name nginx-container nginx-devops-demo

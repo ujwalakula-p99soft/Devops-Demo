@@ -1,8 +1,6 @@
-FROM nginx:latest
+FROM nginx:1.25-alpine
 
 COPY app/index.html /usr/share/nginx/html/index.html
-
-RUN cat /usr/share/nginx/html/index.html   # 👈 debug line
 
 EXPOSE 80
 

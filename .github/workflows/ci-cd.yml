@@ -87,7 +87,7 @@ jobs:
             echo "Cloning repo..."
             GIT_ASKPASS=true git clone https://github.com/ujwalakula-p99soft/Devops-Demo.git
 
-            cd demo-app
+            cd Devops-Demo
 
             echo "Stopping old container..."
             sudo docker rm -f nginx-container || true

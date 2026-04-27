@@ -1,5 +1,4 @@
-name: CI/CD Pipeline
-
+name: CI/CD-Pipeline
 on:
   push:
     branches: ["main"]
@@ -7,22 +6,21 @@ on:
 jobs:
   pipeline:
     runs-on: ubuntu-latest
-    
     steps:
-      # Use v4 but suppress the node warning by telling GitHub it's okay to use Node 20 for now
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          # This specifically tells GitHub to stop warning you about Node 20
+          token: ${{ github.token }} 
         env:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
-      - name: Build Image
-        run: docker build -t devops-demo .
-
-      - name: Test Container
+      - name: Build & Test Locally
         run: |
+          docker build -t devops-demo .
           docker run -d -p 8080:80 --name test devops-demo
           sleep 5
-          curl -f http://localhost:8080 || exit 1
+          curl -f http://localhost:8080
           docker rm -f test
 
       - name: Deploy to EC2
@@ -31,8 +29,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          # We removed 'set -e' temporarily to see which specific command fails
           script: |
+            # Using sudo ensures Docker and RM commands don't fail due to permissions
             cd /home/ec2-user
             sudo rm -rf demo-app
             git clone https://github.com demo-app

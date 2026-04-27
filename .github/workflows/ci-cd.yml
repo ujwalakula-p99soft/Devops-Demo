@@ -33,7 +33,7 @@ jobs:
             # Using sudo ensures Docker and RM commands don't fail due to permissions
             cd /home/ec2-user
             sudo rm -rf demo-app
-            git clone https://github.com demo-app
+            git clone https://github.com/ujwalakula-p99soft/Devops-Demo.git
             cd demo-app
             sudo docker rm -f nginx-container || true
             sudo docker build -t nginx-devops-demo .

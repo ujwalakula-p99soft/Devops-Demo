@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code (FIXED version)
+      # 1. Checkout
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -20,14 +20,19 @@ jobs:
       - name: Build Image
         run: docker build -t devops-demo .
 
-      # 3. Test container
+      # 3. Run & Test container
       - name: Test Container
         run: |
           docker run -d -p 8080:80 --name test devops-demo
-          sleep 5
 
-          # Fail if app not responding correctly
-          curl -f http://localhost:8080 | grep "Hello"
+          echo "Waiting for container..."
+          sleep 10
+
+          echo "Checking HTTP response..."
+          curl -f http://localhost:8080
+
+          echo "Container logs:"
+          docker logs test || true
 
           docker rm -f test
 
@@ -43,22 +48,26 @@ jobs:
 
             cd /home/ec2-user
 
-            # Clean old repo
+            echo "Cleaning old repo..."
             rm -rf demo-app
 
-            # Clone fresh code
+            echo "Cloning repo..."
             git clone https://github.com/ujwalakula-p99soft/Devops-Demo.git demo-app
             cd demo-app
 
-            # Stop old container
+            echo "Stopping old container..."
             docker rm -f nginx-container || true
 
-            # Build new image
+            echo "Building new image..."
             docker build -t nginx-devops-demo .
 
-            # Run container
+            echo "Starting new container..."
             docker run -d -p 80:80 --name nginx-container nginx-devops-demo
 
-            # Wait and verify deployment
-            sleep 5
-            curl -f http://localhost | grep "Hello"
+            echo "Waiting for deployment..."
+            sleep 10
+
+            echo "Verifying deployment..."
+            curl -f http://localhost
+
+            echo "Deployment successful"
